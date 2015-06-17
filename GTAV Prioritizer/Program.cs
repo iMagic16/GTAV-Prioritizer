@@ -68,6 +68,11 @@ namespace GTAV_Prioritizer
                     Properties.Settings.Default.LaunchGTA = false;
                 }
 
+
+                Console.WriteLine("Program configured, if you wish to change some settings create a file called noskip.txt where this program is.");
+                Properties.Settings.Default.SkipBS = true;
+
+
             }
             Properties.Settings.Default.Save();
             #endregion
