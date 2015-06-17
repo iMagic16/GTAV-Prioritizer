@@ -11,7 +11,7 @@ namespace GTAV_Prioritizer
     {
         static void Main(string[] args)
         {
-            string GTAVexe = "gtav";
+            string GTAVexe = "gta5";
             bool found = false;
 
             Console.WriteLine("GTAV Prioritizer by Magic");
@@ -19,7 +19,7 @@ namespace GTAV_Prioritizer
             while (found == false)
             {
 
-                Console.WriteLine("Scanning for GTAV.exe");
+                Console.WriteLine("Scanning for {0}", GTAVexe);
                 System.Threading.Thread.Sleep(500);
                 //check for GTAV.exe
                 Process[] RunningProcess = Process.GetProcessesByName(GTAVexe);
@@ -36,14 +36,15 @@ namespace GTAV_Prioritizer
 
                             Console.WriteLine("Setting prio to high..");
                             //set to high prio
+                            System.Threading.Thread.Sleep(500);
                             try
                             {
                                 GTAVProcess.PriorityClass = ProcessPriorityClass.High;
                                 Console.WriteLine("Priority set");
-
+                                System.Threading.Thread.Sleep(500);
                                 GTAVProcess.Refresh();
                                 Console.WriteLine("Process updated. [ Name: {0} | ID: {1} | Prio: {2} ]", GTAVProcess.ProcessName, GTAVProcess.Id, GTAVProcess.PriorityClass);
-
+                                System.Threading.Thread.Sleep(500);
 
                                 found = true;
                             }
