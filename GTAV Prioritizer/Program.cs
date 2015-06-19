@@ -26,7 +26,7 @@ namespace GTAV_Prioritizer
             }
             else
             {
-                Console.WriteLine("Program not yet configured or users wants popup, configuring...");
+                Console.WriteLine("Program not yet configured, configuring...");
             }
 
             #region configuration
@@ -54,11 +54,20 @@ namespace GTAV_Prioritizer
                     Properties.Settings.Default.CloseGTALauncher = false;
                 }
 
+                string StartGTA = "";
                 //should we start gta from here
-                Console.WriteLine("Do you wish to start gtav every time this program is launched? y/n");
+                while (!(StartGTA == "y" | StartGTA == "n"))
+                {
+                    Console.WriteLine("Do you wish to start gtav every time this program is launched? y/n");
 
-                string StartGTA;
-                StartGTA = Console.ReadLine();
+                    try
+                    {
+                        StartGTA = Console.ReadLine();
+                    }
+                    catch (Exception) { }
+
+
+                }
                 if (StartGTA == "y")
                 {
                     Properties.Settings.Default.LaunchGTA = true;
@@ -80,11 +89,10 @@ namespace GTAV_Prioritizer
             //rungta!
             if (Properties.Settings.Default.LaunchGTA == true)
                 LaunchGTA();
+
             //prioritize it!
             Prioritize();
-            //wait for game to load social club
-            Console.WriteLine("Waiting for game to load social club");
-            System.Threading.Thread.Sleep(10000);
+
             //close launcher!
             if (Properties.Settings.Default.CloseGTALauncher == true)
                 CloseLauncher();
@@ -96,6 +104,11 @@ namespace GTAV_Prioritizer
         }
         static void CloseLauncher()
         {
+
+            //wait for game to load social club
+            Console.WriteLine("Waiting for game to load...");
+            System.Threading.Thread.Sleep(10000);
+
             string GTAVLauncherexe = "GTAVLauncher";
             Console.WriteLine("Attempting to close launcher...");
             Process[] RunningShit = Process.GetProcessesByName(GTAVLauncherexe);
@@ -126,7 +139,7 @@ namespace GTAV_Prioritizer
         static void LaunchGTA()
         {
             //steam://run/271590
-            Console.WriteLine("Booting GTA");
+            Console.WriteLine("Booting GTA to main menu");
             try
             {
                 System.Diagnostics.Process.Start("steam://run/271590");
@@ -145,7 +158,7 @@ namespace GTAV_Prioritizer
             while (found == false)
             {
 
-                Console.WriteLine("Scanning for {0}", GTAVexe);
+                Console.WriteLine("Scanning for {0}.exe", GTAVexe);
                 System.Threading.Thread.Sleep(500);
                 //check for GTAV.exe
                 Process[] RunningProcess = Process.GetProcessesByName(GTAVexe);
@@ -158,7 +171,7 @@ namespace GTAV_Prioritizer
                             Console.WriteLine("Process found. [ Name: {0} | ID: {1} | Prio: {2} ]", GTAVProcess.ProcessName, GTAVProcess.Id, GTAVProcess.PriorityClass);
                             //wait for game to chillout
                             Console.WriteLine("Waiting for game to settle after boot...");
-                            System.Threading.Thread.Sleep(5000);
+                            System.Threading.Thread.Sleep(15000);
 
                             Console.WriteLine("Setting prio to high..");
                             //set to high prio
@@ -189,8 +202,8 @@ namespace GTAV_Prioritizer
                 }
                 else
                 {
-                    Console.WriteLine("No process found... trying again in 2500ms");
-                    System.Threading.Thread.Sleep(2500);
+                    Console.WriteLine("No process found... trying again in 5000ms");
+                    System.Threading.Thread.Sleep(5000);
                 }
             }
 
