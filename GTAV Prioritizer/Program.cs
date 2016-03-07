@@ -59,24 +59,42 @@ namespace GTAV_Prioritizer
                 while (!(StartGTA == "y" | StartGTA == "n"))
                 {
                     Console.WriteLine("Do you wish to start gtav every time this program is launched? y/n");
-
+                    
                     try
                     {
                         StartGTA = Console.ReadLine();
                     }
-                    catch (Exception) { }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
 
+                    if (StartGTA == "y")
+                    {
+                        Properties.Settings.Default.LaunchGTA = true;
+                    }
+                    else
+                    {
+                        Properties.Settings.Default.LaunchGTA = false;
+                    }
 
                 }
-                if (StartGTA == "y")
+
+                string RGSC = "";
+                while (!(RGSC == "r" | RGSC == "s"))
                 {
-                    Properties.Settings.Default.LaunchGTA = true;
-                }
-                else
-                {
-                    Properties.Settings.Default.LaunchGTA = false;
-                }
 
+                    Console.WriteLine("Are you using Steam or RGSC? r/s");
+                    RGSC = Console.ReadLine();
+                    if (RGSC == "r")
+                    {
+                        Properties.Settings.Default.GTARGSC = true;
+                    }
+                    else if (RGSC == "s")
+                    {
+                        Properties.Settings.Default.GTARGSC = false;
+                    }
+                }
 
                 Console.WriteLine("Program configured, if you wish to change some settings create a file called noskip.txt where this program is.");
                 Properties.Settings.Default.SkipBS = true;
@@ -87,8 +105,9 @@ namespace GTAV_Prioritizer
             #endregion
 
             //rungta!
-            if (Properties.Settings.Default.LaunchGTA == true)
-                LaunchGTA();
+            bool LaunchGTAornah = Properties.Settings.Default.LaunchGTA;
+            if (LaunchGTAornah)
+                LaunchGTA(Properties.Settings.Default.GTARGSC);
 
             //prioritize it!
             Prioritize();
@@ -136,18 +155,36 @@ namespace GTAV_Prioritizer
             }
 
         }
-        static void LaunchGTA()
+        static void LaunchGTA(bool isRGSC)
         {
             //steam://run/271590
-            Console.WriteLine("Booting GTA to main menu");
-            try
+            Console.WriteLine("Booting GTA");
+            if (!isRGSC)
             {
-                System.Diagnostics.Process.Start("steam://run/271590");
+                try
+                {
+                    Console.WriteLine("Launching via Steam");
+                    System.Diagnostics.Process.Start("steam://run/271590");
 
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine(e.Message);
+                try
+                {
+                    Console.WriteLine("Launching via RGSC");
+                    Console.WriteLine("PLEASE MAKE SURE THIS EXE IS IN THE SAME LOCATION AS GTA5.EXE");
+                    System.Diagnostics.Process.Start("PlayGTAV.exe");
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
         }
         static void Prioritize()

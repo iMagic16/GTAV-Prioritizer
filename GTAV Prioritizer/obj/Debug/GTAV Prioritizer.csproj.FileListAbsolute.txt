@@ -12,3 +12,9 @@ D:\Dropbox\Windows Sync\Xenon-II\Documents\GitHub\GTAV-Prioritizer\GTAV Prioriti
 D:\Dropbox\Windows Sync\Xenon-II\Documents\GitHub\GTAV-Prioritizer\GTAV Prioritizer\bin\Debug\GTAV Prioritizer.pdb
 D:\Dropbox\Windows Sync\Xenon-II\Documents\GitHub\GTAV-Prioritizer\GTAV Prioritizer\obj\Debug\GTAV Prioritizer.exe
 D:\Dropbox\Windows Sync\Xenon-II\Documents\GitHub\GTAV-Prioritizer\GTAV Prioritizer\obj\Debug\GTAV Prioritizer.pdb
+D:\Dropbox\Projects\Visual Studio\GTAV-Prioritizer\GTAV Prioritizer\bin\Debug\GTAV Prioritizer.exe.config
+D:\Dropbox\Projects\Visual Studio\GTAV-Prioritizer\GTAV Prioritizer\obj\Debug\GTAV Prioritizer.exe
+D:\Dropbox\Projects\Visual Studio\GTAV-Prioritizer\GTAV Prioritizer\obj\Debug\GTAV Prioritizer.pdb
+D:\Dropbox\Projects\Visual Studio\GTAV-Prioritizer\GTAV Prioritizer\bin\Debug\GTAV Prioritizer.exe
+D:\Dropbox\Projects\Visual Studio\GTAV-Prioritizer\GTAV Prioritizer\bin\Debug\GTAV Prioritizer.pdb
+D:\Dropbox\Projects\Visual Studio\GTAV-Prioritizer\GTAV Prioritizer\obj\Debug\GTAV Prioritizer.csprojResolveAssemblyReference.cache
