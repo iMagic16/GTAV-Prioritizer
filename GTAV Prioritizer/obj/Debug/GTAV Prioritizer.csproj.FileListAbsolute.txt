@@ -18,3 +18,5 @@ D:\Dropbox\Projects\Visual Studio\GTAV-Prioritizer\GTAV Prioritizer\obj\Debug\GT
 D:\Dropbox\Projects\Visual Studio\GTAV-Prioritizer\GTAV Prioritizer\bin\Debug\GTAV Prioritizer.exe
 D:\Dropbox\Projects\Visual Studio\GTAV-Prioritizer\GTAV Prioritizer\bin\Debug\GTAV Prioritizer.pdb
 D:\Dropbox\Projects\Visual Studio\GTAV-Prioritizer\GTAV Prioritizer\obj\Debug\GTAV Prioritizer.csprojResolveAssemblyReference.cache
+D:\Dropbox\Projects\Visual Studio\GTAV-Prioritizer\GTAV Prioritizer\obj\Debug\GTAV_Prioritizer.Properties.Resources.resources
+D:\Dropbox\Projects\Visual Studio\GTAV-Prioritizer\GTAV Prioritizer\obj\Debug\GTAV Prioritizer.csproj.GenerateResource.Cache

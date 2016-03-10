@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
 
@@ -13,30 +9,100 @@ namespace GTAV_Prioritizer
         static void Main(string[] args)
         {
             Console.WriteLine("Grand Theft Auto Prioritizer by Magic");
-            bool skiptheBS = false;
-            skiptheBS = Properties.Settings.Default.SkipBS;
-            if (File.Exists("noskip.txt"))
+
+            try
             {
-                skiptheBS = false;
-                Console.WriteLine("noskip.txt found...");
+                /*
+                if (!(File.Exists("MagiCorpDevTools.dll")))
+                {
+                    File.WriteAllBytes("MagiCorpDevTools.dll", Properties.Resources.MagiCorpDevTools_Debugger);
+                }
+                */
+
+
+                Debug.Init();
+
+                bool skiptheBS = false;
+                skiptheBS = Properties.Settings.Default.SkipBS;
+
+
+                bool RGSC_Exists;
+                if (!(Properties.Settings.Default.GTARGSC == "true" | Properties.Settings.Default.GTARGSC == "false"))
+                {
+                    RGSC_Exists = false;
+                }
+                else
+                {
+                    RGSC_Exists = true;
+                }
+
+                if (File.Exists("noskip.txt"))
+                {
+                    skiptheBS = false;
+                    Debug.ConOut("noskip.txt found...", false, true);
+                    Configure(skiptheBS);
+                }
+                else if (!RGSC_Exists)
+                {
+                    Debug.ConOut("Old version? resetting config", true);
+                    skiptheBS = false; //if using old config......
+                    Configure(skiptheBS);
+                }
+                else if (skiptheBS)
+                {
+                    Debug.ConOut("Program already configured, continuing...");
+                }
+                else
+                {
+                    Debug.ConOut("Program not yet configured, configuring...");
+                    Configure(false);
+                }
             }
-            else if (skiptheBS)
+            catch (Exception e)
             {
-                Console.WriteLine("Program already configured, continuing...");
-            }
-            else
-            {
-                Console.WriteLine("Program not yet configured, configuring...");
+                Debug.ConOut(e.Message, true);
             }
 
-            #region configuration
-            if (skiptheBS == false)
+
+            //rungta!
+            bool LaunchGTAornah = Properties.Settings.Default.LaunchGTA;
+            if (LaunchGTAornah == true)
+            {
+                if (Properties.Settings.Default.GTARGSC == "true")
+                {
+                    LaunchGTA(true);
+                }
+                else
+                {
+                    LaunchGTA(false);
+                }
+            }
+
+            //prioritize it!
+            Prioritize();
+
+            //close launcher!
+            if (Properties.Settings.Default.CloseGTALauncher == true)
+                CloseLauncher();
+
+            //we're done
+            Debug.ConOut("Program Finished, exiting...");
+            System.Threading.Thread.Sleep(10000);
+            Environment.Exit(1);
+
+
+
+        }
+
+        static void Configure(bool SkipTheBS)
+        {
+            if (SkipTheBS == false)
             {
                 //should we close launcher
                 string ToCloseLauncher = "";
                 while (!(ToCloseLauncher == "y" | ToCloseLauncher == "n"))
                 {
-                    Console.WriteLine("Do you wish to close GTAVLauncher.exe when the game is loaded? y/n (may cause crashing)");
+                    Debug.ConOut("Do you wish to close GTAVLauncher.exe when the game is loaded? y/n (may cause crashing)", false, false, true);
                     try
                     {
                         ToCloseLauncher = Console.ReadLine();
@@ -58,15 +124,15 @@ namespace GTAV_Prioritizer
                 //should we start gta from here
                 while (!(StartGTA == "y" | StartGTA == "n"))
                 {
-                    Console.WriteLine("Do you wish to start gtav every time this program is launched? y/n");
-                    
+                    Debug.ConOut("Do you wish to start gtav every time this program is launched? y/n", false, false, true);
+
                     try
                     {
                         StartGTA = Console.ReadLine();
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.Message);
+                        Debug.ConOut(e.Message);
                     }
 
                     if (StartGTA == "y")
@@ -84,106 +150,91 @@ namespace GTAV_Prioritizer
                 while (!(RGSC == "r" | RGSC == "s"))
                 {
 
-                    Console.WriteLine("Are you using Steam or RGSC? r/s");
+                    Debug.ConOut("Are you using Steam or RGSC? r/s", false, false, true);
                     RGSC = Console.ReadLine();
                     if (RGSC == "r")
                     {
-                        Properties.Settings.Default.GTARGSC = true;
+                        Properties.Settings.Default.GTARGSC = "true";
                     }
                     else if (RGSC == "s")
                     {
-                        Properties.Settings.Default.GTARGSC = false;
+                        Properties.Settings.Default.GTARGSC = "false";
                     }
                 }
 
-                Console.WriteLine("Program configured, if you wish to change some settings create a file called noskip.txt where this program is.");
+                Debug.ConOut("Program configured, if you wish to change some settings create a file called noskip.txt where this program is.", false, true);
                 Properties.Settings.Default.SkipBS = true;
 
 
             }
             Properties.Settings.Default.Save();
-            #endregion
 
-            //rungta!
-            bool LaunchGTAornah = Properties.Settings.Default.LaunchGTA;
-            if (LaunchGTAornah)
-                LaunchGTA(Properties.Settings.Default.GTARGSC);
-
-            //prioritize it!
-            Prioritize();
-
-            //close launcher!
-            if (Properties.Settings.Default.CloseGTALauncher == true)
-                CloseLauncher();
-
-            //we're done
-            Console.WriteLine("Program Finished, exiting...");
-            System.Threading.Thread.Sleep(10000);
-            Environment.Exit(1);
         }
+
+
         static void CloseLauncher()
         {
 
             //wait for game to load social club
-            Console.WriteLine("Waiting for game to load...");
+            Debug.ConOut("Waiting for game to load...");
             System.Threading.Thread.Sleep(10000);
 
             string GTAVLauncherexe = "GTAVLauncher";
-            Console.WriteLine("Attempting to close launcher...");
+            Debug.ConOut("Attempting to close launcher...");
             Process[] RunningShit = Process.GetProcessesByName(GTAVLauncherexe);
             if (RunningShit.Length > 0)
             {
                 foreach (Process GTAVLauncher in RunningShit)
                 {
-                    Console.WriteLine("Process found. [ Name: {0} | ID: {1} | Prio: {2} ]", GTAVLauncher.ProcessName, GTAVLauncher.Id, GTAVLauncher.PriorityClass);
+                    Debug.ConOut("Process found. [ Name: " + GTAVLauncher.ProcessName + " | ID: " + GTAVLauncher.Id + " | Prio: " + GTAVLauncher.PriorityClass + " ]",false, true);
 
-                    Console.WriteLine("Killing...");
+                    Debug.ConOut("Killing...");
                     try
                     {
                         GTAVLauncher.Kill();
-                        Console.WriteLine("Process killed");
+                        Debug.ConOut("Process killed", false, true);
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.Message);
+                        Debug.ConOut(e.Message, true);
                     }
                 }
             }
             else
             {
-                Console.WriteLine("No GTAVlauncher found...");
+                Debug.ConOut("No GTAVlauncher found...");
             }
 
         }
         static void LaunchGTA(bool isRGSC)
         {
             //steam://run/271590
-            Console.WriteLine("Booting GTA");
+            Debug.ConOut("Booting GTA");
             if (!isRGSC)
             {
                 try
                 {
-                    Console.WriteLine("Launching via Steam");
-                    System.Diagnostics.Process.Start("steam://run/271590");
+                    Debug.ConOut("Launching via Steam");
+                    Process.Start("steam://run/271590");
 
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Debug.ConOut(e.Message);
                 }
             }
             else
             {
                 try
                 {
-                    Console.WriteLine("Launching via RGSC");
-                    Console.WriteLine("PLEASE MAKE SURE THIS EXE IS IN THE SAME LOCATION AS GTA5.EXE");
-                    System.Diagnostics.Process.Start("PlayGTAV.exe");
+                    Debug.ConOut("Launching via RGSC");
+                    Debug.ConOut("PLEASE MAKE SURE THIS EXE IS IN THE SAME LOCATION AS GTA5.EXE");
+                    Process.Start("PlayGTAV.exe");
 
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Debug.ConOut(e.Message, true);
                 }
             }
         }
@@ -195,7 +246,7 @@ namespace GTAV_Prioritizer
             while (found == false)
             {
 
-                Console.WriteLine("Scanning for {0}.exe", GTAVexe);
+                Debug.ConOut("Scanning for " + GTAVexe + ".exe");
                 System.Threading.Thread.Sleep(500);
                 //check for GTAV.exe
                 Process[] RunningProcess = Process.GetProcessesByName(GTAVexe);
@@ -205,41 +256,43 @@ namespace GTAV_Prioritizer
                     {
                         try
                         {
-                            Console.WriteLine("Process found. [ Name: {0} | ID: {1} | Prio: {2} ]", GTAVProcess.ProcessName, GTAVProcess.Id, GTAVProcess.PriorityClass);
+                            Debug.ConOut("Process found. [ Name: " + GTAVProcess.ProcessName + " | ID: " + GTAVProcess.Id + " | Prio: " + GTAVProcess.PriorityClass + " ]",false, true);
                             //wait for game to chillout
-                            Console.WriteLine("Waiting for game to settle after boot...");
+                            Debug.ConOut("Waiting for game to settle after boot...");
                             System.Threading.Thread.Sleep(15000);
 
-                            Console.WriteLine("Setting prio to high..");
+                            Debug.ConOut("Setting prio to high..");
                             //set to high prio
                             System.Threading.Thread.Sleep(500);
                             try
                             {
                                 GTAVProcess.PriorityClass = ProcessPriorityClass.High;
-                                Console.WriteLine("Priority set");
+                                Debug.ConOut("Priority set");
                                 System.Threading.Thread.Sleep(500);
                                 GTAVProcess.Refresh();
-                                Console.WriteLine("Process updated. [ Name: {0} | ID: {1} | Prio: {2} ]", GTAVProcess.ProcessName, GTAVProcess.Id, GTAVProcess.PriorityClass);
+                                Debug.ConOut("Process found. [ Name: " + GTAVProcess.ProcessName + " | ID: " + GTAVProcess.Id + " | Prio: " + GTAVProcess.PriorityClass + " ]", false, true);
                                 System.Threading.Thread.Sleep(500);
 
                                 found = true;
                             }
-                            catch (Exception err)
+                            catch (Exception e)
                             {
-                                Console.WriteLine(err.Message);
-                                System.Threading.Thread.Sleep(5000);
+                                Debug.ConOut(e.Message, true);
+                            
+                            System.Threading.Thread.Sleep(5000);
                             }
                         }
-                        catch (Exception er)
+                        catch (Exception e)
                         {
-                            Console.WriteLine(er.Message);
-                            System.Threading.Thread.Sleep(5000);
+                            Debug.ConOut(e.Message, true);
+                        
+                        System.Threading.Thread.Sleep(5000);
                         }
                     }
                 }
                 else
                 {
-                    Console.WriteLine("No process found... trying again in 5000ms");
+                    Debug.ConOut("No process found... trying again in 5000ms");
                     System.Threading.Thread.Sleep(5000);
                 }
             }
